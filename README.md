@@ -1,2 +1,172 @@
 # ELIAS-ADVANCED-CALCULATOR.
-Advanced Equation Calculator is an interactive, browser-based tool for students and professionals. It performs arithmetic, algebra, calculus, statistics, matrices, physics, and engineering calculations, including trigonometry, exponents, factorials.
+Advanced Equation Calculator is an interactive, browser-based tool for students and professionals. It performs arithmetic, algebra, calculus, statistics, matrices, physics, and engineering calculations, including trigonometry, exponents, factorials,πr².
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Advanced Equation Calculator</title>
+
+<style>
+body {
+    background: #eaeaea;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.calculator {
+    background: #1e1e1e;
+    padding: 15px;
+    border-radius: 10px;
+    width: 420px;
+}
+
+.display {
+    width: 100%;
+    height: 55px;
+    font-size: 20px;
+    text-align: right;
+    padding: 8px;
+    margin-bottom: 10px;
+}
+
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+}
+
+button {
+    padding: 12px;
+    font-size: 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.num { background: #444; color: white; }
+.op { background: orange; }
+.func { background: #666; color: white; }
+.eq { background: green; color: white; }
+.clr { background: red; color: white; }
+.eqn { background: #0a7; color: white; }
+</style>
+</head>
+
+<body>
+
+<div class="calculator">
+<input type="text" id="display" class="display" disabled>
+
+<div class="buttons">
+
+<button class="clr" onclick="clearDisplay()">C</button>
+<button class="func" onclick="del()">⌫</button>
+<button class="func" onclick="append('(')">(</button>
+<button class="func" onclick="append(')')">)</button>
+<button class="func" onclick="append('Math.PI')">π</button>
+
+<button class="func" onclick="sqrt()">√</button>
+<button class="func" onclick="cbrt()">³√</button>
+<button class="func" onclick="power()">^</button>
+<button class="func" onclick="factorial()">!</button>
+<button class="op" onclick="append('/')">÷</button>
+
+<button class="func" onclick="sin()">sin</button>
+<button class="func" onclick="cos()">cos</button>
+<button class="func" onclick="tan()">tan</button>
+<button class="func" onclick="log()">log</button>
+<button class="func" onclick="ln()">ln</button>
+
+<button class="num" onclick="append('7')">7</button>
+<button class="num" onclick="append('8')">8</button>
+<button class="num" onclick="append('9')">9</button>
+<button class="op" onclick="append('*')">×</button>
+<button class="op" onclick="append('-')">−</button>
+
+<button class="num" onclick="append('4')">4</button>
+<button class="num" onclick="append('5')">5</button>
+<button class="num" onclick="append('6')">6</button>
+<button class="op" onclick="append('+')">+</button>
+<button class="func" onclick="square()">x²</button>
+
+<button class="num" onclick="append('1')">1</button>
+<button class="num" onclick="append('2')">2</button>
+<button class="num" onclick="append('3')">3</button>
+<button class="func" onclick="cube()">x³</button>
+<button class="eq" onclick="calculate()">=</button>
+
+<button class="num" onclick="append('0')">0</button>
+<button class="num" onclick="append('.')">.</button>
+<button class="func" onclick="percent()">%</button>
+
+<!-- Equation buttons -->
+<button class="eqn" onclick="solveLinear()">Solve ax+b=0</button>
+<button class="eqn" onclick="solveQuadratic()">Solve ax²+bx+c=0</button>
+<button class="eqn" onclick="areaCircle()">Area πr²</button>
+
+</div>
+</div>
+
+<script>
+let display = document.getElementById("display");
+
+function append(v){ display.value += v; }
+function clearDisplay(){ display.value = ""; }
+function del(){ display.value = display.value.slice(0,-1); }
+
+function calculate(){
+    try { display.value = eval(display.value); }
+    catch { display.value = "Error"; }
+}
+
+function sqrt(){ display.value = Math.sqrt(display.value); }
+function cbrt(){ display.value = Math.cbrt(display.value); }
+function power(){ display.value += "**"; }
+function percent(){ display.value = display.value / 100; }
+function square(){ display.value = Math.pow(display.value,2); }
+function cube(){ display.value = Math.pow(display.value,3); }
+
+function factorial(){
+    let n = parseInt(display.value);
+    if(n<0){ display.value="Error"; return; }
+    let f=1; for(let i=1;i<=n;i++) f*=i;
+    display.value = f;
+}
+
+function sin(){ display.value = Math.sin(toRad(display.value)); }
+function cos(){ display.value = Math.cos(toRad(display.value)); }
+function tan(){ display.value = Math.tan(toRad(display.value)); }
+function log(){ display.value = Math.log10(display.value); }
+function ln(){ display.value = Math.log(display.value); }
+function toRad(d){ return d*Math.PI/180; }
+
+/* EQUATION SOLVERS */
+function solveLinear(){
+    let a = parseFloat(prompt("Enter a"));
+    let b = parseFloat(prompt("Enter b"));
+    if(a===0){ display.value="a cannot be 0"; return; }
+    display.value = "x = " + (-b/a);
+}
+
+function solveQuadratic(){
+    let a = parseFloat(prompt("Enter a"));
+    let b = parseFloat(prompt("Enter b"));
+    let c = parseFloat(prompt("Enter c"));
+    let d = b*b - 4*a*c;
+    if(d<0){ display.value="No real roots"; return; }
+    let x1 = (-b + Math.sqrt(d))/(2*a);
+    let x2 = (-b - Math.sqrt(d))/(2*a);
+    display.value = "x₁="+x1+" , x₂="+x2;
+}
+
+function areaCircle(){
+    let r = parseFloat(prompt("Enter radius"));
+    display.value = "Area = " + (Math.PI*r*r);
+}
+</script>
+
+</body>
+</html>
